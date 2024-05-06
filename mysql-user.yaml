@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbuser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbuser
+  template:
+    metadata:
+      labels:
+        app: dbuser
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: userdatabase
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: MYSQL_ROOT_PASSWORD_USER
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbuser
+spec:
+  selector:
+    app: dbuser
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
