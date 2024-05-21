@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-api-deployment
+  labels:
+    app: auth-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-api
+  template:
+    metadata:
+      labels:
+        app: auth-api
+    spec:
+      containers:
+      - name: auth-api
+        image: servetc/authapi:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8083
+        env:
+        - name: SPRING_APPLICATION_NAME
+          value: "auth-service"
+        - name: SERVER_PORT
+          value: "8083"
+        # - name: JWT_SECRET_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: jwt-secrets
+        #       key: SECRET_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-api-service
+spec:
+  selector:
+    app: auth-api
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+  type: ClusterIP
