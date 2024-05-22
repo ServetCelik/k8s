@@ -23,8 +23,8 @@ spec:
       containers:
       - name: tweet-api
         image: servetc/twix:latest
-        imagePullPolicy: IfNotPresent
-        # imagePullPolicy: Always
+        # imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
 
         ports:
           - containerPort: 8081

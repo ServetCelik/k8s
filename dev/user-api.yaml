@@ -23,8 +23,8 @@ spec:
       containers:
       - name: user-api
         image: servetc/userapi:latest
-        imagePullPolicy: IfNotPresent
-        # imagePullPolicy: Always
+        # imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
 
         ports:
           - containerPort: 8082
