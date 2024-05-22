@@ -7,8 +7,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/ServetCelik/k8s.git
-    targetRevision: v1.2.3
-    # targetRevision: HEAD
+    # targetRevision: v1.2.3
+    targetRevision: HEAD
     path: dev
   destination:
     server: https://kubernetes.default.svc
