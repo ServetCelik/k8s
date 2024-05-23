@@ -38,22 +38,24 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service:8083/validate"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       # Bypass authentication for login and register endpoints
-      if ($request_uri ~* "^/user/login") {
-        set $skip_auth "true";
+      if ($request_uri ~ "^/user/login" || $request_uri ~ "^/user/register") {
+        set $skip_auth "yes";
       }
-      if ($request_uri ~* "^/user/register") {
-        set $skip_auth "true";
-      }
-      proxy_set_header Authorization "";
 
-      # Apply authentication only if $skip_auth is not "true"
+      # Apply authentication only if $skip_auth is not "yes"
+      proxy_set_header Authorization "";
       auth_request_set $auth_status $upstream_status;
-      auth_request /_external-auth;
       error_page 401 = @error401;
 
       # Define error handling for unauthorized requests
       location @error401 {
         return 401;
+      }
+
+      location / {
+        if ($skip_auth = "no") {
+          auth_request /_external-auth;
+        }
       }
 
       location = /_external-auth {
