@@ -72,6 +72,13 @@ spec:
             name: user-api-service
             port:
               number: 8082
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-api-service
+            port:
+              number: 8083
 
 
 
