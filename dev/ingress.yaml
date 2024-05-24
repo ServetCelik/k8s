@@ -1,7 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress   
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service:8083/validate"
+    nginx.ingress.kubernetes.io/auth-signin: "http://user-api-service:8082/login"
 spec:
   ingressClassName: nginx
   rules:
@@ -28,13 +31,3 @@ spec:
             name: user-api-service
             port:
               number: 8082
-      - path: /auth
-        pathType: Prefix
-        backend:
-          service:
-            name: auth-api-service
-            port:
-              number: 8083
-
-
-
