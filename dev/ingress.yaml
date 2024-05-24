@@ -1,7 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress   
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.default.svc.cluster.local:8083/validate"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/auth/signin"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      # Bypass authentication on specific endpoints
+      location ~* ^/user/(login|register) {
+        auth_request off;
+      }
 spec:
   ingressClassName: nginx
   rules:
@@ -35,6 +43,3 @@ spec:
             name: auth-api-service
             port:
               number: 8083
-
-
-
