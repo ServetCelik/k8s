@@ -1,6 +1,33 @@
 apiVersion: networking.k8s.io/v1
-kind: IngressClass
+kind: Ingress
 metadata:
-  name: nginx
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service:8083/authenticate"
+    nginx.ingress.kubernetes.io/auth-signin: "http://auth-api-service:8083/signin"
 spec:
-  controller: k8s.io/ingress-nginx
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /tweet
+        pathType: Prefix
+        backend:
+          service:
+            name: tweet-api-service
+            port:
+              number: 8081
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: user-api-service
+            port:
+              number: 8082
