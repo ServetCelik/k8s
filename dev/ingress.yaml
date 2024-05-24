@@ -1,55 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.default.svc.cluster.local/validate"
-    nginx.ingress.kubernetes.io/auth-method: "GET"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      # Skip authentication for specific paths
-      set $skip_auth 0;
-      if ($request_uri ~* "^/user/login") {
-        set $skip_auth 1;
-      }
-      if ($request_uri ~* "^/user/register") {
-        set $skip_auth 1;
-      }
-      if ($skip_auth = 0) {
-        auth_request /validate;
-      }
+  name: example-ingress   
 spec:
   ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /user/register
-        pathType: Prefix
-        backend:
-          service:
-            name: user-api-service
-            port:
-              number: 8082
-      - path: /user/login
-        pathType: Prefix
-        backend:
-          service:
-            name: user-api-service
-            port:
-              number: 8082
-      - path: /user
-        pathType: Prefix
-        backend:
-          service:
-            name: user-api-service
-            port:
-              number: 8082
-      - path: /tweet
-        pathType: Prefix
-        backend:
-          service:
-            name: tweet-api-service
-            port:
-              number: 8081
       - path: /
         pathType: Prefix
         backend:
@@ -57,120 +14,27 @@ spec:
             name: frontend-service
             port:
               number: 80
+      - path: /tweet
+        pathType: Prefix
+        backend:
+          service:
+            name: tweet-api-service
+            port:
+              number: 8081
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: user-api-service
+            port:
+              number: 8082
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-api-service
+            port:
+              number: 8083
 
-
-
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: example-ingress   
-# spec:
-#   ingressClassName: nginx
-#   rules:
-#   - http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: frontend-service
-#             port:
-#               number: 80
-#       - path: /tweet
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: tweet-api-service
-#             port:
-#               number: 8081
-#       - path: /user
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: user-api-service
-#             port:
-#               number: 8082
-
-
-
-
-# ------------------------------------------------------------
-
-
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: example-ingress
-#   annotations:
-#     nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service:8083/validate"
-#     nginx.ingress.kubernetes.io/configuration-snippet: |
-#       # Bypass authentication for login and register endpoints
-#       if ($request_uri ~ "^/user/login" || $request_uri ~ "^/user/register") {
-#         set $skip_auth "yes";
-#       }
-
-#       # Apply authentication only if $skip_auth is not "yes"
-#       proxy_set_header Authorization "";
-#       auth_request_set $auth_status $upstream_status;
-#       error_page 401 = @error401;
-
-#       # Define error handling for unauthorized requests
-#       location @error401 {
-#         return 401;
-#       }
-
-#       location / {
-#         if ($skip_auth = "no") {
-#           auth_request /_external-auth;
-#         }
-#       }
-
-#       location = /_external-auth {
-#         internal;
-#         proxy_pass              http://auth-api-service:8083/validate;
-#         proxy_pass_request_body off;
-#         proxy_set_header        Content-Length "";
-#         proxy_set_header        X-Original-URI $request_uri;
-#       }
-# spec:
-#   ingressClassName: nginx
-#   rules:
-#   - http:
-#       paths:
-#       - path: /user/login
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: user-api-service
-#             port:
-#               number: 8082
-#       - path: /user/register
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: user-api-service
-#             port:
-#               number: 8082
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: frontend-service
-#             port:
-#               number: 80
-#       - path: /tweet
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: tweet-api-service
-#             port:
-#               number: 8081
-#       - path: /user
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: user-api-service
-#             port:
-#               number: 8082
 
 
