@@ -1,24 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.default.svc.cluster.local:8083/validate"
-    nginx.ingress.kubernetes.io/auth-signin: "http://$host/auth/signin"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      # Check if the request path matches /user/login or /user/register
-      set $bypass_auth 0;
-      if ($request_uri ~* "^/user/(login|register)") {
-        set $bypass_auth 1;
-      }
-      # Apply auth_request depending on the bypass_auth variable
-      auth_request set_by_lua_block {
-        if ngx.var.bypass_auth == "1" then
-          return ngx.OK
-        else
-          return ngx.exec("@auth")
-        end
-      }
+  name: example-ingress   
 spec:
   ingressClassName: nginx
   rules:
@@ -52,3 +35,6 @@ spec:
             name: auth-api-service
             port:
               number: 8083
+
+
+
