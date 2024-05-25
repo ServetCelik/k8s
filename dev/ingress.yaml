@@ -44,20 +44,20 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress 
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.twix.svc.cluster.local:8083/auth/validate"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      # Apply auth only if path does not match the following
-      auth_request /_external-auth-Lw-Prefix;
-      auth_request_set $auth_status $upstream_status;
-      if ($request_uri ~* "^/user/login|^/user/register") {
-        set $auth_status 200;
-      }
-      if ($auth_status = 401) {
-        return 401;
-      }
+  # annotations:
+  #   kubernetes.io/ingress.class: "nginx"
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
+  #   nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.twix.svc.cluster.local:8083/auth/validate"
+  #   nginx.ingress.kubernetes.io/configuration-snippet: |
+  #     # Apply auth only if path does not match the following
+  #     auth_request /_external-auth-Lw-Prefix;
+  #     auth_request_set $auth_status $upstream_status;
+  #     if ($request_uri ~* "^/user/login|^/user/register") {
+  #       set $auth_status 200;
+  #     }
+  #     if ($auth_status = 401) {
+  #       return 401;
+  #     }
 spec:
   ingressClassName: nginx
   rules:
@@ -99,13 +99,13 @@ spec:
             port:
               number: 8082
 
-      # - path: /auth
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-api-service
-      #       port:
-      #         number: 8083
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-api-service
+            port:
+              number: 8083
 
 
 
