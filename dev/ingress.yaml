@@ -55,15 +55,21 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.twix.svc.cluster.local:8083/auth/validate"
     # nginx.ingress.kubernetes.io/auth-signin: "http://auth-api-service.twix.svc.cluster.local:8083/auth/generateAccessToken"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      satisfy any;
+      # First, allow all traffic to specific endpoints
+      set $skip_auth "0";
+      if ($uri ~* "^/user/login|^/user/register") {
+        set $skip_auth "1";
+      }
+      
+      # Apply auth only if $skip_auth is "0"
       auth_request_set $auth_status $upstream_status;
-      if ($request_uri ~* "^/user/login|^/user/register") {
-        set $auth_status 200;
+      if ($skip_auth = "0") {
+        auth_request /_external-auth-Lw-Prefix;
+        auth_request_set $auth_status $upstream_status;
+        if ($auth_status = 401) {
+          return 401;
+        }
       }
-      if ($auth_status = 401) {
-        return 401;
-      }
-  
 spec:
   ingressClassName: nginx
   rules:
@@ -90,20 +96,20 @@ spec:
             name: user-api-service
             port:
               number: 8082
-      - path: /user/login
-        pathType: Prefix
-        backend:
-          service:
-            name: user-api-service
-            port:
-              number: 8082
-      - path: /user/register
-        pathType: Prefix
-        backend:
-          service:
-            name: user-api-service
-            port:
-              number: 8082
+      # - path: /user/login
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: user-api-service
+      #       port:
+      #         number: 8082
+      # - path: /user/register
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: user-api-service
+      #       port:
+      #         number: 8082
       # - path: /auth
       #   pathType: Prefix
       #   backend:
