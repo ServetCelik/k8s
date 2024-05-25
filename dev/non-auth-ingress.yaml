@@ -9,14 +9,14 @@ spec:
   ingressClassName: nginx
   rules:
   - http:
-      paths:
-      - path: /app
+      paths: 
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: frontend-service
             port:
-              number: 80
+              number: 80     
       - path: /user/login
         pathType: Exact
         backend:
