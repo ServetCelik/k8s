@@ -53,7 +53,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     # Authenticate requests
     nginx.ingress.kubernetes.io/auth-url: "http://auth-api-service.twix.svc.cluster.local:8083/auth/validate"
-    nginx.ingress.kubernetes.io/auth-signin: "http://auth-api-service.twix.svc.cluster.local:8083/auth/generateAccessToken"
+    # nginx.ingress.kubernetes.io/auth-signin: "http://auth-api-service.twix.svc.cluster.local:8083/auth/generateAccessToken"
   
 spec:
   ingressClassName: nginx
