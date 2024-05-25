@@ -45,7 +45,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress   
+  name: example-ingress 
+  annotations:
+    # Use Nginx as the ingress controller
+    kubernetes.io/ingress.class: "nginx"
+    # Enable CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    # Authenticate requests
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-api:8083/auth/validate"
+    nginx.ingress.kubernetes.io/auth-signin: "http://auth-api:8083/auth/generateAccessToken"  
 spec:
   ingressClassName: nginx
   rules:
@@ -72,13 +80,13 @@ spec:
             name: user-api-service
             port:
               number: 8082
-      - path: /auth
-        pathType: Prefix
-        backend:
-          service:
-            name: auth-api-service
-            port:
-              number: 8083
+      # - path: /auth
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth-api-service
+      #       port:
+      #         number: 8083
 
 
 
