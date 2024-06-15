@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
-  # namespace: ingress-nginx
 spec:
   replicas: 1
   selector:
@@ -19,17 +18,11 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-        # env:
-        # - name: REACT_APP_API_BASE_URL_TWEET
-        #   value: "http://localhost:8081"
-        # - name: REACT_APP_API_BASE_URL_USER
-        #   value: "http://localhost:8082"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
-  # namespace: ingress-nginx
 spec:
   selector:
     app: frontend

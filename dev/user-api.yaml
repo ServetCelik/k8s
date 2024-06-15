@@ -58,11 +58,9 @@ spec:
         - name: SPRING_JPA_HIBERNATE_DDL_AUTO
           value: "update"
         - name: SPRING_DATASOURCE_URL
-          # value: "jdbc:mysql://mymysqlserver45.mysql.database.azure.com:3306/flexibleserverdb"
-          value: "jdbc:mysql://dbuser:3306/userdatabase"
+          value: "jdbc:mysql://twixdb.mysql.database.azure.com:3306/mydb?useSSL=true"
         - name: SPRING_DATASOURCE_USERNAME
-          # value: "myadmin"
-          value: "root"
+          value: "twixdb"
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
