@@ -57,15 +57,15 @@ spec:
           value: "user_exchange"
         - name: SPRING_JPA_HIBERNATE_DDL_AUTO
           value: "update"
-        # - name: SPRING_DATASOURCE_URL
-        #   value: "jdbc:mysql://twixdb.mysql.database.azure.com:3306/mydb?useSSL=true"
-        # - name: SPRING_DATASOURCE_USERNAME
-        #   value: "twixdb"
-        # - name: SPRING_DATASOURCE_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: all-secrets
-        #       key: MYSQL_ROOT_PASSWORD_USERAPI
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://twixdb.mysql.database.azure.com:3306/mydb?useSSL=true"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "twixdb"
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: MYSQL_ROOT_PASSWORD_USERAPI
         - name: SPRING_JPA_OPEN_IN_VIEW
           value: "false"
         - name: SPRING_JPA_SHOW_SQL
